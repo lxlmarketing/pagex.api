@@ -1,0 +1,7 @@
+db:
+  host: 'localhost'
+  username: 'sfbtlh'
+  password: '123'
+
+jwt:
+  secret: 'sacpfhhf2ç'

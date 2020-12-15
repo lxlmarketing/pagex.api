@@ -1,0 +1,16 @@
+server:
+  port: 3030
+
+db:
+  type: 'postgres'
+  port: '5432'
+  database: 'landingi'
+
+jwt:
+  expiresIn: 36000
+
+mail:
+  host: 'smtp.zoho.com'
+  port: 465
+  user: 'contato@pagex.com.br'
+  pass: 'pagex2020'
