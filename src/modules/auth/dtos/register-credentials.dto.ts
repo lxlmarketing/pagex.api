@@ -11,8 +11,8 @@ export class RegisterCredentialsDto {
 
   @IsNotEmpty()
   @IsString()
-  name: string
-  
+  name: string;
+
   /*
     - Minimum 8 characters 
     - one uppercase letter 

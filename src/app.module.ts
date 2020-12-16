@@ -1,3 +1,4 @@
+import { LogsModule } from './modules/logs/logs.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
@@ -7,7 +8,7 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 import { join } from 'path';
 import { CustomersModule } from './modules/customer/customer.module';
 import { SubaccountsModule } from './modules/subaccounts/subaccounts.module';
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config';
 
 import * as typeOrmConfig from './database/typeorm.config';
 import * as config from 'config';
@@ -41,6 +42,7 @@ const mailConfig = config.get('mail');
     TypeOrmModule.forRoot(typeOrmConfig),
     CustomersModule,
     SubaccountsModule,
+    LogsModule,
   ],
 })
 export class AppModule {}
