@@ -10,6 +10,7 @@ import {
   ValidationPipe,
   NotAcceptableException,
   Logger,
+  UseGuards,
 } from '@nestjs/common';
 import { Customer } from './customer.entity';
 import { CustomersService } from './customer.service';
@@ -21,8 +22,10 @@ import { ResetEmailDto } from './dtos/reset-email.dto';
 import { Cron, Interval } from '@nestjs/schedule';
 import { addSeconds, isAfter } from 'date-fns';
 import { PaymentStatus } from './payment-status.enum';
+import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('customers')
+@UseGuards(JwtAuthGuard)
 export class CustomersController {
   constructor(private readonly customerService: CustomersService) {}
 
