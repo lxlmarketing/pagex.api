@@ -1,4 +1,4 @@
-import { LogsModule } from './modules/logs/logs.module';
+// import { LogsModule } from './modules/logs/logs.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './modules/auth/auth.module';
@@ -42,7 +42,7 @@ const mailConfig = config.get('mail');
     TypeOrmModule.forRoot(typeOrmConfig),
     CustomersModule,
     SubaccountsModule,
-    LogsModule,
+    // LogsModule,
   ],
 })
 export class AppModule {}
