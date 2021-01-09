@@ -9,7 +9,6 @@ import {
   UsePipes,
   ValidationPipe,
   NotAcceptableException,
-  UseGuards,
 } from '@nestjs/common';
 import { Customer } from './customer.entity';
 import { CustomersService } from './customer.service';
@@ -18,10 +17,8 @@ import { UpdateCustomerDto } from './dtos/update-customer.dto';
 import { HotmartHookDto } from './dtos/hotmart-hook.dto';
 import * as generator from 'generate-password';
 import { ResetEmailDto } from './dtos/reset-email.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 
 @Controller('customers')
-@UseGuards(JwtAuthGuard)
 export class CustomersController {
   constructor(private readonly customerService: CustomersService) {}
 
