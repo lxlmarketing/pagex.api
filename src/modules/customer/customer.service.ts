@@ -17,8 +17,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 
 import { v4 as uuidv4 } from 'uuid';
 import { ResetEmailDto } from './dtos/reset-email.dto';
-import { UnapprovedPaymentRepository } from './unapproved-payment.repository';
-import { UnapprovedPayment } from './unapproved-payment.entity';
 
 import { pt } from 'date-fns/locale';
 import { format } from 'date-fns';
@@ -28,8 +26,6 @@ export class CustomersService {
   constructor(
     @InjectRepository(CustomerRepository)
     private readonly customerRepository: CustomerRepository,
-    @InjectRepository(UnapprovedPaymentRepository)
-    private readonly unapprovedPaymentRepository: UnapprovedPaymentRepository,
 
     private readonly httpService: HttpService,
     private readonly mailerService: MailerService,
@@ -280,122 +276,5 @@ export class CustomersService {
           throw new BadRequestException(error);
         },
       );
-  }
-
-  async customerCanceledPayment(email: string): Promise<any> {
-    // const customer = await this.checkCustomerExistByMail(email);
-
-    // if (customer) {
-    // const landingiMail = customer.pagexEmail
-    //   ? customer.pagexEmail
-    //   : customer.hotmartEmail;
-
-    //TODO cron logic
-
-    const date = new Date();
-    const payday = `${date.getDate() + 3}/${date.getMonth() +
-      1}/${date.getFullYear()}`;
-
-    return await this.mailerService.sendMail({
-      from: 'contato@pagex.com.br',
-      to: email,
-      subject: 'Compra não aprovada',
-      template: 'unapproved_payment',
-      context: { payday },
-    });
-    // }
-  }
-
-  // Temporary method
-  async updateCustomerOnPagex(email: string, data: any): Promise<any> {
-    const customer = await this.customerRepository.findOne({
-      hotmartEmail: email,
-    });
-
-    const params = new URLSearchParams(data);
-    try {
-      await this.httpService
-        .post(`/subaccounts/${customer.pagexId}`, params)
-        .toPromise()
-        .then(
-          async res => {
-            console.log('teste');
-
-            if (res.status == 200) {
-              await this.customerRepository.update(customer.id, {
-                active: false,
-              });
-              return await this.mailerService.sendMail({
-                from: 'contato@pagex.com.br',
-                to: email,
-                subject: 'Cancelamento de Conta',
-                template: 'canceled_subscription',
-              });
-            }
-          },
-          async err => {
-            const { error } = err.response.data;
-            throw new BadRequestException(
-              'Subscription Canceled Error: ',
-              error,
-            );
-          },
-        );
-    } catch (error) {
-      console.log(error);
-
-      throw new NotFoundException('Error on Subscription canceled: ', error);
-    }
-  }
-
-  async createUnapprovedPayment(email: string): Promise<any> {
-    const customer = await this.customerRepository.findOne({
-      hotmartEmail: email,
-    });
-
-    if (!customer) {
-      throw new NotFoundException('Customer not found');
-    }
-
-    const unapprovedPayment = this.unapprovedPaymentRepository.create({
-      customerId: customer.id,
-      pagexId: customer.pagexId,
-    });
-
-    return await this.unapprovedPaymentRepository
-      .save(unapprovedPayment)
-      .then(async res => {
-        const payday = format(res.createdAt, 'dd', { locale: pt });
-        return await this.mailerService.sendMail({
-          from: 'contato@pagex.com.br',
-          to: email,
-          subject: 'Pagamento não aprovado',
-          template: 'unapproved_payment.hbs',
-          context: {
-            name: customer.name.split(' ')[0],
-            payday,
-          },
-        });
-      });
-  }
-
-  async sendSuspendedAccountEmail(email: string, name: string): Promise<any> {
-    return await this.mailerService.sendMail({
-      from: 'contato@pagex.com.br',
-      to: email,
-      subject: 'Conta suspensa',
-      template: 'suspended_account.hbs',
-      context: {
-        name: name.split(' ')[0],
-      },
-    });
-  }
-
-  async getUnapprovedPayments(): Promise<UnapprovedPayment[]> {
-    return this.unapprovedPaymentRepository.find();
-  }
-
-  async deleteUnapprovedPayment(id: number): Promise<any> {
-    return this.unapprovedPaymentRepository.delete(id);
   }
 }

@@ -3,7 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomersController } from './customer.controller';
 import { CustomerRepository } from './customer.repository';
 import { CustomersService } from './customer.service';
-import { UnapprovedPaymentRepository } from './unapproved-payment.repository';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { UnapprovedPaymentRepository } from './unapproved-payment.repository';
         'Content-Type': 'application/x-www-form-urlencoded',
       },
     }),
-    TypeOrmModule.forFeature([CustomerRepository, UnapprovedPaymentRepository]),
+    TypeOrmModule.forFeature([CustomerRepository]),
   ],
   controllers: [CustomersController],
   providers: [CustomersService],
