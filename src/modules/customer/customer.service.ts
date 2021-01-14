@@ -85,7 +85,7 @@ export class CustomersService {
       context: {
         name: createCustomerDto.name.split(' ')[0],
         email: createCustomerDto.hotmartEmail,
-        link: `https://pagex.app/reset?token=${customer.resetToken}`,
+        link: `https://landing-dashboard.herokuapp.com/reset?token=${customer.resetToken}`,
       },
     });
   }
