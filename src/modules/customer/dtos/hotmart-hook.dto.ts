@@ -12,4 +12,12 @@ export class HotmartHookDto {
   @IsOptional()
   @IsString()
   status: string;
+  
+  @IsNotEmpty()
+  @IsString()
+  phone_local_code: string;
+  
+  @IsNotEmpty()
+  @IsString()
+  phone_number: string;
 }
