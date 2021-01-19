@@ -17,6 +17,7 @@ import { UpdateCustomerDto } from './dtos/update-customer.dto';
 import { HotmartHookDto } from './dtos/hotmart-hook.dto';
 import * as generator from 'generate-password';
 import { ResetEmailDto } from './dtos/reset-email.dto';
+import axios from 'axios';
 
 @Controller('customers')
 export class CustomersController {
@@ -71,7 +72,23 @@ export class CustomersController {
   @Post('/hook')
   @UsePipes(ValidationPipe)
   async listenToHook(@Body() hotmartHookDto: HotmartHookDto): Promise<any> {
-    const { name, email } = hotmartHookDto;
+    const {
+      name,
+      email,
+      // phone_checkout_number,
+      // phone_checkout_local_code,
+      phone_number,
+      phone_local_code,
+    } = hotmartHookDto;
+
+    axios.post(
+      'https://api-boleto-braip.herokuapp.com/api/v1/whatsapp/message',
+      {
+        message: `Fala ${name}, tudo bom?\n\nPrimeiramente, obrigado por escolher o PageX Builder.\n\nAs instruções de acesso à plataforma já foram enviadas para seu e-mail: ${email}\n\nAh, mais uma coisa! Meu nome é Lucas, adicione nosso contato aí. Qualquer dúvida que tiver pode me chamar, ok?`,
+        // number: `${phone_checkout_local_code}${phone_checkout_number}`,
+        number: `${phone_local_code}${phone_number}`,
+      },
+    );
 
     const isNewSubscription = await this.customerService.checkCustomerExistByMail(
       email,

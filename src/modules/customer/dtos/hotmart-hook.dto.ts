@@ -12,8 +12,12 @@ export class HotmartHookDto {
   @IsOptional()
   @IsString()
   status: string;
-  
+
+  phone_checkout_local_code: string;
+
   phone_local_code: string;
-  
+
+  phone_checkout_number: string;
+
   phone_number: string;
 }
