@@ -81,19 +81,19 @@ export class CustomersController {
       phone_local_code,
     } = hotmartHookDto;
 
-    axios.post(
-      'https://api-boleto-braip.herokuapp.com/api/v1/whatsapp/message',
-      {
-        message: `Fala ${name}, tudo bom?\n\nPrimeiramente, obrigado por escolher o PageX Builder.\n\nAs instruções de acesso à plataforma já foram enviadas para seu e-mail: ${email}\n\nAh, mais uma coisa! Meu nome é Lucas, adicione nosso contato aí. Qualquer dúvida que tiver pode me chamar, ok?`,
-        // number: `${phone_checkout_local_code}${phone_checkout_number}`,
-        number: `${phone_local_code}${phone_number}`,
-      },
-    );
-
-    const isNewSubscription = await this.customerService.checkCustomerExistByMail(
+    const customerExists = await this.customerService.checkCustomerExistByMail(
       email,
     );
-    if (isNewSubscription === false) {
+    if (customerExists === false) {
+      await axios.post(
+        'https://api-boleto-braip.herokuapp.com/api/v1/whatsapp/message',
+        {
+          message: `Fala ${name}, tudo bom?\n\nPrimeiramente, obrigado por escolher o PageX Builder.\n\nAs instruções de acesso à plataforma já foram enviadas para seu e-mail: ${email}\n\nAh, mais uma coisa! Meu nome é Lucas, adicione nosso contato aí. Qualquer dúvida que tiver pode me chamar, ok?`,
+          // number: `${phone_checkout_local_code}${phone_checkout_number}`,
+          number: `${phone_local_code}${phone_number}`,
+        },
+      );
+
       const pageXData = {
         name,
         email,
@@ -106,6 +106,7 @@ export class CustomersController {
         editor: '1',
         active: '1',
       };
+
       return this.customerService.createCustomerOnPagex(pageXData);
     }
     throw new NotAcceptableException('Account already exists - ', email);
