@@ -89,7 +89,7 @@ export class CustomersController {
         await axios.post(
           'https://api-boleto-braip.herokuapp.com/api/v1/whatsapp/message',
           {
-            message: `Fala ${name}, tudo bom?\n\nPrimeiramente, obrigado por escolher o PageX Builder.\n\nAs instruções de acesso à plataforma já foram enviadas para seu e-mail: ${email}\n\nAh, mais uma coisa! Meu nome é Lucas, adicione nosso contato aí. Qualquer dúvida que tiver pode me chamar, ok?`,
+            message: `Fala *` + ${name}.split(' ')[0] + `*, tudo bom? ` + String.fromCodePoint(0x1F642) + `\n\nPrimeiramente, obrigado por escolher o PageX Builder.\n\n` + String.fromCodePoint(0x2705) + `As instruções de acesso à plataforma já foram enviadas para seu e-mail: *${email}*\n\nAh, mais uma coisa! Meu nome é Lucas, adicione nosso contato aí. Qualquer dúvida que tiver pode me chamar, ok?`,
             // number: `${phone_checkout_local_code}${phone_checkout_number}`,
             number: `${phone_local_code}${phone_number}`,
           },
